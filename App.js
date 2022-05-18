@@ -5,7 +5,6 @@ import Main from './Main'
 import Web3 from 'web3';
 import './App.css';
 
-//Declare IPFS
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
 
@@ -25,13 +24,12 @@ class App extends Component {
       window.web3 = new Web3(window.web3.currentProvider)
     }
     else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+      window.alert('Non-Ethereum browser detected. Go for MetaMask!')
     }
   }
 
   async loadBlockchainData() {
     const web3 = window.web3
-    // Load account
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
     // Network ID
@@ -43,7 +41,6 @@ class App extends Component {
       const videosCount = await dvideo.methods.videoCount().call()
       this.setState({ videosCount })
 
-      // Load videos, sort by newest
       for (var i=videosCount; i>=1; i--) {
         const video = await dvideo.methods.videos(i).call()
         this.setState({
@@ -51,7 +48,6 @@ class App extends Component {
         })
       }
 
-      //Set latest video with title to view as default 
       const latest = await dvideo.methods.videos(videosCount).call()
       this.setState({
         currentHash: latest.hash,
@@ -79,7 +75,6 @@ class App extends Component {
   uploadVideo = title => {
     console.log("Submitting file to IPFS...")
 
-    //adding file to the IPFS
     ipfs.add(this.state.buffer, (error, result) => {
       console.log('IPFS result', result)
       if(error) {
